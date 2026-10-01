@@ -95,7 +95,7 @@ class InvestmentComparator:
         lines = [
             "⚖️ <b>SO SÁNH CÁC KÊNH ĐẦU TƯ TẠI VIỆT NAM</b>",
             f"<i>Giả định vốn ban đầu: {cap:,.0f} đ | Thời gian: {years} năm</i>",
-            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+            "─────────────────────",
         ]
 
         for ch in comp_data["channels"]:

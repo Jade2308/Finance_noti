@@ -17,6 +17,8 @@ from telegram.ext import (
     ContextTypes,
     filters,
 )
+import html
+import re
 from education.glossary import get_term_explanation, list_all_terms
 from notifications.message_formatter import MessageFormatter
 
@@ -400,46 +402,135 @@ class FinanceTelegramBot:
 
     # ─────────────────── Broadcast & Helpers ───────────────────
 
+    @staticmethod
+    def strip_html(text: str) -> str:
+        """Loại bỏ thẻ HTML và unescape entities khi cần fallback gửi văn bản thuần (plain text)."""
+        if not text:
+            return ""
+        clean = re.sub(r'</?(?:b|strong)>', '', text)
+        clean = re.sub(r'</?(?:i|em)>', '', clean)
+        clean = re.sub(r'</?blockquote>', '\n> ', clean)
+        clean = re.sub(r'<a\s+href=[\'"]([^\'"]+)[\'"]>([^<]+)</a>', r'\2 (\1)', clean)
+        clean = re.sub(r'<[^>]+>', '', clean)
+        return html.unescape(clean).strip()
+
+    @staticmethod
+    def split_telegram_html(text: str, max_chars: int = 3800) -> List[str]:
+        """
+        Chia nhỏ văn bản HTML dài thành các đoạn an toàn <= max_chars cho Telegram.
+        Tự động cân bằng và đóng thẻ ở cuối đoạn, mở lại ở đầu đoạn kế tiếp để chống lỗi 400 Bad Request.
+        """
+        if not text:
+            return []
+        if len(text) <= max_chars:
+            return [text]
+
+        tag_re = re.compile(r'<(/?)([a-zA-Z0-9_-]+)(?:\s+[^>]*?)?>')
+        valid_tags = {'b', 'i', 'u', 's', 'code', 'pre', 'blockquote', 'a', 'strong', 'em', 'tg-spoiler'}
+
+        def get_open_tags(html_str: str):
+            stack = []
+            for match in tag_re.finditer(html_str):
+                is_closing = match.group(1) == '/'
+                tag_name = match.group(2).lower()
+                if tag_name in valid_tags:
+                    if not is_closing:
+                        stack.append((tag_name, match.group(0)))
+                    else:
+                        for i in range(len(stack) - 1, -1, -1):
+                            if stack[i][0] == tag_name:
+                                stack.pop(i)
+                                break
+            return stack
+
+        paragraphs = text.split('\n\n')
+        chunks: List[str] = []
+        current_chunk = ''
+
+        for p in paragraphs:
+            cand = (current_chunk + '\n\n' + p).strip() if current_chunk else p
+            if len(cand) <= max_chars:
+                current_chunk = cand
+            else:
+                if current_chunk:
+                    open_tags = get_open_tags(current_chunk)
+                    closing = ''.join(f'</{t[0]}>' for t in reversed(open_tags))
+                    chunks.append(current_chunk + closing)
+                    reopen = ''.join(t[1] for t in open_tags)
+                    current_chunk = reopen
+
+                cand_p = (current_chunk + '\n\n' + p).strip() if current_chunk else p
+                if len(cand_p) <= max_chars:
+                    current_chunk = cand_p
+                else:
+                    lines = p.split('\n')
+                    for line in lines:
+                        cand_l = (current_chunk + '\n' + line).strip() if current_chunk else line
+                        if len(cand_l) <= max_chars:
+                            current_chunk = cand_l
+                        else:
+                            if current_chunk:
+                                open_tags = get_open_tags(current_chunk)
+                                closing = ''.join(f'</{t[0]}>' for t in reversed(open_tags))
+                                chunks.append(current_chunk + closing)
+                                reopen = ''.join(t[1] for t in open_tags)
+                                current_chunk = reopen
+
+                            cand_l2 = (current_chunk + '\n' + line).strip() if current_chunk else line
+                            if len(cand_l2) <= max_chars:
+                                current_chunk = cand_l2
+                            else:
+                                words = line.split(' ')
+                                for w in words:
+                                    cand_w = (current_chunk + ' ' + w).strip() if current_chunk else w
+                                    if len(cand_w) <= max_chars:
+                                        current_chunk = cand_w
+                                    else:
+                                        if current_chunk:
+                                            open_tags = get_open_tags(current_chunk)
+                                            closing = ''.join(f'</{t[0]}>' for t in reversed(open_tags))
+                                            chunks.append(current_chunk + closing)
+                                            reopen = ''.join(t[1] for t in open_tags)
+                                            current_chunk = (reopen + ' ' + w).strip()
+                                        else:
+                                            chunks.append(w[:max_chars])
+                                            current_chunk = w[max_chars:]
+
+        if current_chunk.strip():
+            open_tags = get_open_tags(current_chunk)
+            closing = ''.join(f'</{t[0]}>' for t in reversed(open_tags))
+            chunks.append(current_chunk + closing)
+
+        return chunks
+
     async def send_broadcast_message(self, text: str, chat_id: Optional[str] = None):
-        """Gửi tin nhắn chủ động (báo cáo hàng ngày hoặc cảnh báo khẩn)."""
+        """Gửi tin nhắn chủ động (báo cáo hàng ngày hoặc cảnh báo khẩn) an toàn."""
         target_chat = chat_id or self.default_chat_id
         if not target_chat:
             logger.warning("[Telegram] Không có CHAT_ID để gửi broadcast.")
             return
-
-        if self.app:
-            await self._send_safe_html(target_chat, text)
-        else:
-            from telegram import Bot
-            bot = Bot(token=self.token)
-            chunks = [text[i:i + 4000] for i in range(0, len(text), 4000)]
-            for chunk in chunks:
-                try:
-                    await bot.send_message(chat_id=target_chat, text=chunk, parse_mode=ParseMode.HTML)
-                except Exception:
-                    await bot.send_message(chat_id=target_chat, text=chunk)
-                await asyncio.sleep(0.4)
+        await self._send_safe_html(target_chat, text)
 
     async def _send_safe_html(self, chat_id, text: str):
-        """Gửi tin nhắn với phân đoạn an toàn và fallback nếu HTML parse lỗi."""
-        chunks = [text[i:i + 4000] for i in range(0, len(text), 4000)]
+        """Gửi tin nhắn với phân đoạn HTML thông minh, chống đứt gãy thẻ và fallback văn bản sạch."""
+        chunks = self.split_telegram_html(text, max_chars=3800)
+
+        # Lấy bot instance
+        bot_instance = self.app.bot if self.app else None
+        if not bot_instance:
+            from telegram import Bot
+            bot_instance = Bot(token=self.token)
+
         for chunk in chunks:
             try:
-                if self.app:
-                    await self.app.bot.send_message(chat_id=chat_id, text=chunk, parse_mode=ParseMode.HTML)
-                else:
-                    from telegram import Bot
-                    bot = Bot(token=self.token)
-                    await bot.send_message(chat_id=chat_id, text=chunk, parse_mode=ParseMode.HTML)
+                await bot_instance.send_message(chat_id=chat_id, text=chunk, parse_mode=ParseMode.HTML)
             except Exception as e:
-                logger.warning("[Telegram HTML Error fallback]: %s", e)
+                logger.warning("[Telegram HTML parse error]: %s. Chuyển sang fallback plain text sạch.", e)
                 try:
-                    if self.app:
-                        await self.app.bot.send_message(chat_id=chat_id, text=chunk)
-                    else:
-                        from telegram import Bot
-                        bot = Bot(token=self.token)
-                        await bot.send_message(chat_id=chat_id, text=chunk)
+                    # Tuyệt đối không gửi raw HTML thô — loại bỏ thẻ HTML trước khi gửi fallback!
+                    clean_text = self.strip_html(chunk)
+                    await bot_instance.send_message(chat_id=chat_id, text=clean_text)
                 except Exception as e2:
-                    logger.error("[Telegram] Không thể gửi tin nhắn: %s", e2)
-            await asyncio.sleep(0.4)
+                    logger.error("[Telegram] Lỗi nghiêm trọng khi gửi fallback: %s", e2)
+            await asyncio.sleep(0.35)
+

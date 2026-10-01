@@ -231,12 +231,11 @@ class VNFinanceHubApp:
                 cpi_annual_pct=cpi_annual_pct,
             )
 
-            # Format bản tin
-            report_text = self.formatter.format_daily_report(
+            # Format bản tin: Tách 2 phần rõ ràng (Dashboard & Nhận định AI) để tối ưu giao diện di động
+            overview_text = self.formatter.format_daily_overview(
                 portfolio_analysis=data["portfolio_analysis"],
                 market_data=data["market_data"],
                 nav_trend=data["nav_trend"],
-                ai_commentary=ai_commentary,
                 gold_data=data["gold_data"],
                 forex_data=data["forex_data"],
                 sentiment_data=data["sentiment_data"],
@@ -244,18 +243,23 @@ class VNFinanceHubApp:
                 news_data=data["news_data"],
                 benchmark_summary=benchmark_summary,
             )
+            ai_text = self.formatter.format_ai_commentary(ai_commentary)
 
-            # Gửi qua Telegram
+            # Gửi qua Telegram (Dashboard trước, sau đó gửi Nhận định AI)
             if self.bot.is_configured():
-                await self.bot.send_broadcast_message(report_text)
-                self.db.save_notification_log("DAILY_REPORT", report_text, "SENT_TELEGRAM")
-                logger.info("Đã gửi báo cáo thành công qua Telegram.")
+                await self.bot.send_broadcast_message(overview_text)
+                await asyncio.sleep(0.8)
+                await self.bot.send_broadcast_message(ai_text)
+                self.db.save_notification_log("DAILY_REPORT", f"{overview_text}\n\n{ai_text}", "SENT_TELEGRAM")
+                logger.info("Đã gửi báo cáo thành công qua Telegram (2 tin nhắn riêng biệt).")
             else:
                 logger.warning("Telegram Bot Token chưa được điền trong .env. Báo cáo hiển thị tại Console:")
                 print("\n" + "=" * 60)
-                print(report_text)
+                print(overview_text)
+                print("-" * 60)
+                print(ai_text)
                 print("=" * 60 + "\n")
-                self.db.save_notification_log("DAILY_REPORT", report_text, "LOGGED_CONSOLE")
+                self.db.save_notification_log("DAILY_REPORT", f"{overview_text}\n\n{ai_text}", "LOGGED_CONSOLE")
 
         except Exception as e:
             logger.error("Lỗi trong quá trình lập báo cáo hàng ngày: %s", e, exc_info=True)

@@ -132,31 +132,26 @@ HÃY PHÂN TÍCH BỘ DỮ LIỆU THỜI GIAN THỰC SAU ĐÂY:
 - Tín hiệu: {'🟢 Quỹ đang vượt trội NH' if _cagr_approx > _bank_rate else '🔴 Quỹ đang kém hiệu quả hơn gửi NH — cần đánh giá lại!'}
 
 ----------------------------------------------------------------------
-YÊU CẦU CẤU TRÚC PHÂN TÍCH (Trình bày mạch lạc, chặt chẽ, dễ hiểu, dùng bullet points):
-
-1. 🌍 BỨC TRANH LIÊN THỊ TRƯỜNG HIỆN NAY:
-   - Đánh giá tổng quan sự phân bổ dòng tiền giữa: Chứng khoán (VN-Index) - Vàng (SJC) - Tỷ giá (USD).
-   - Thị trường đang ở xu hướng nào?
-
-2. 🧠 TÂM LÝ THỊ TRƯỜNG (MARKET SENTIMENT):
-   - Nhà đầu tư hiện tại đang có tâm lý gì? (Ví dụ: Thận trọng phòng thủ, tích cực gom hàng, hay hoang mang bán tháo? Có đang rút tiền sang kênh vàng hoặc gửi tiết kiệm không?).
-
-3. 🏢 QUỸ ĐẦU TƯ VEOF BIẾN ĐỘNG RA SAO VÀ TẠI SAO:
-   - Giải thích mối liên hệ giữa biến động NAV của VEOF với các cổ phiếu cốt lõi mà quỹ đang giữ (đặc biệt là nhóm Ngân hàng như VCB, MBB, CTG, TCB, ACB chiếm tỷ trọng lớn, cùng FPT, HPG, MWG).
-   - Tại sao lệnh mua 2023 lại lãi rất đậm (>40%) trong khi lệnh mua gần hơn 2025 lại đang điều chỉnh nhẹ?
-
-4. 🔍 ĐIỀU GÌ DẪN ĐẾN NHỮNG THỨ ĐÓ (CĂN NGUYÊN VĨ MÔ):
-   - Phân tích nguyên nhân cốt lõi: Áp lực tỷ giá USD/VND thế nào? Lãi suất điều hành và lãi suất ngân hàng đang hút hay đẩy tiền ra thị trường? Tình hình kinh tế phục hồi hay gặp trở ngại gì?
-
-5. 🎯 ĐÁNH GIÁ RỦI RO VÀ LỜI KHUYÊN KHÁCH QUAN (VỐN ~300K):
-   - Dựa trên toàn bộ dữ liệu trên, đánh giá KHÁCH QUAN: Đây có phải thời điểm tốt để tiếp tục DCA không? Nêu CẢ HAI phía — lý do NÊN tiếp tục và lý do CÂN NHẮC dừng/chờ.
-   - Mức độ rủi ro hiện tại của danh mục (Thấp / Trung bình / Cao) và tại sao?
-   - Nếu có rủi ro đáng kể (thị trường downtrend mạnh, lãi suất NH vượt lợi nhuận quỹ, macro xấu), hãy nói thẳng và đề xuất hành động cụ thể.
-
-QUY TẮC ĐỊNH DẠNG DÀNH CHO GIAO DIỆN TELEGRAM MOBILE (BẮT BUỘC):
+QUY TẮC BẮT BUỘC:
+- ĐI THẲNG VÀO TRỌNG TÂM: Tuyệt đối KHÔNG chào hỏi xã giao, KHÔNG viết đoạn mở đầu rườm rà (ví dụ: 'Chào bạn...', 'Với tư cách là...'). Bắt đầu ngay bằng phần 1.
+- ĐỘ DÀI: Khoảng 350 - 450 từ (súc tích, cô đọng, vừa vặn trên 1 màn hình Telegram điện thoại).
+- KHÔNG VIẾT CODE HTML: Chỉ dùng Markdown thông thường (**bold**, *italic*, > quote). Hệ thống sẽ tự format.
 - TUYỆT ĐỐI KHÔNG DÙNG BẢNG MARKDOWN (| cột 1 | cột 2 |) vì trên điện thoại sẽ bị vỡ dòng và cực kỳ xấu.
-- Hãy trình bày dạng THẺ THÔNG TIN (Cards) với icon sinh động (📈, 🥇, 💵, 🏦, 🏢, 🔹), in đậm tiêu đề và dùng gạch đầu dòng (•).
-- Dùng dấu trích dẫn > ở đầu dòng cho Lời khuyên quan trọng nhất để tạo khung Blockquote nổi bật.
+
+CẤU TRÚC BÁO CÁO (3 PHẦN TINH GỌN):
+
+1. 🌍 TOÀN CẢNH LIÊN THỊ TRƯỜNG & DÒNG TIỀN:
+   • VN-Index & Xu hướng: Chỉ số đang ở đâu, thanh khoản thế nào? Nhà đầu tư đang thận trọng hay hưng phấn (Fear & Greed)?
+   • Vàng SJC & Ngoại tệ USD: Dòng tiền đang trú ẩn hay chịu áp lực tỷ giá?
+
+2. 🏢 QUỸ VEOF & TÁC ĐỘNG TỪ CỔ PHIẾU CỐT LÕI:
+   • NAV biến động ra sao trong 7 phiên / 30 phiên?
+   • Nhóm cổ phiếu trụ của quỹ (Bank: VCB, MBB, TCB; FPT, HPG) đang tác động tích cực hay tiêu cực?
+   • Đánh giá hiệu suất so với lãi suất ngân hàng (Alpha).
+
+3. 🎯 CHIẾN LƯỢC HÀNH ĐỘNG & LỜI KHUYÊN DCA (VỐN ~300K):
+   • Có nên tiếp tục giải ngân DCA đều đặn không? Quản trị rủi ro thế nào?
+   > Dùng dấu trích dẫn > ở đầu dòng cho Lời khuyên/Hành động quan trọng nhất để tạo khung Blockquote nổi bật trên Telegram.
 """
 
         return self._generate_with_retry(prompt)
@@ -200,23 +195,19 @@ Câu hỏi hiện tại của người dùng:
 
 YÊU CẦU:
 - Tham khảo "LỊCH SỬ TRÒ CHUYỆN GẦN ĐÂY" để hiểu ngữ cảnh (nếu người dùng hỏi tiếp ý trước).
+- Đi thẳng vào câu trả lời, không chào hỏi rườm rà.
+- Giải thích đơn giản, trực quan, có ví dụ gần gũi với người mới bắt đầu.
 - Nếu câu hỏi liên quan đến:
-  + "Thị trường ra sao / tâm lý thế nào": Sử dụng dữ liệu VN-Index, thanh khoản và phân tích tâm lý dòng tiền (risk-on / risk-off).
-  + "Giá vàng, tỷ giá, chứng khoán": Sử dụng dữ liệu vàng SJC, tỷ giá USD/VND thực tế được cung cấp ở trên và giải thích sự dịch chuyển của dòng tiền.
-  + "Điều gì dẫn đến / Tại sao": Luôn giải thích nguyên nhân gốc rễ (Lãi suất, chính sách tiền tệ, tỷ giá, dòng vốn ngoại, kết quả kinh doanh doanh nghiệp).
+  + "Thị trường ra sao / tâm lý thế nào": Sử dụng dữ liệu VN-Index, thanh khoản và phân tích tâm lý dòng tiền.
+  + "Giá vàng, tỷ giá, chứng khoán": Sử dụng dữ liệu vàng SJC, tỷ giá USD/VND thực tế.
   + "Nên mua hay bán / Có nên đầu tư thêm": Phân tích dựa trên số vốn nhỏ của sinh viên, chiến lược DCA dài hạn, nhắc nhở quản trị rủi ro.
-- Giải thích đơn giản, trực quan, có ví dụ gần gũi. Tránh thuật ngữ quá trừu tượng mà không cắt nghĩa.
 
-QUY TẮC ĐỊNH DẠNG DÀNH CHO GIAO DIỆN TELEGRAM MOBILE (BẮT BUỘC):
+QUY TẮC ĐỊNH DẠNG TELEGRAM MOBILE (BẮT BUỘC):
 - TUYỆT ĐỐI KHÔNG DÙNG BẢNG MARKDOWN (| cột 1 | cột 2 |) vì trên điện thoại sẽ bị vỡ dòng và cực kỳ xấu.
 - Hãy trình bày so sánh hoặc số liệu dạng THẺ THÔNG TIN (Cards) với icon sinh động (📈, 🥇, 💵, 🏦, 🏢, 🔹), in đậm tiêu đề và dùng gạch đầu dòng (•).
-  Ví dụ khi so sánh 2 mốc thời gian:
-  📈 Tên chỉ số/kênh:
-  • 2023: số liệu (chú thích)
-  • 2026: số liệu (chú thích)
-  ➔ Nhận xét nhanh
-- Dùng đường kẻ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ để phân tách các phần nếu câu trả lời dài.
+- Dùng đường kẻ ───────────────────── để phân tách các phần nếu câu trả lời dài.
 - Dùng dấu trích dẫn > ở đầu dòng cho Lời khuyên quan trọng nhất để tạo khung Blockquote nổi bật trên Telegram.
+- Không tự viết code HTML.
 """
 
         return self._generate_with_retry(prompt)

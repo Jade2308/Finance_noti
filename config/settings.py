@@ -48,7 +48,20 @@ DB_PATH = os.getenv("DB_PATH", str(BASE_DIR / "finance_hub.db"))
 _PORTFOLIO_PATH = Path(os.getenv("PORTFOLIO_PATH", str(BASE_DIR / "portfolio.json")))
 
 def _load_portfolio() -> list:
-    """Nạp danh mục từ portfolio.json. Fallback về danh mục mẫu nếu file không tồn tại."""
+    """Nạp danh mục từ biến môi trường PORTFOLIO_JSON hoặc file portfolio.json."""
+    # 1. Thử biến môi trường (tiện lợi khi deploy Cloud/Render)
+    portfolio_env = os.getenv("PORTFOLIO_JSON", "").strip()
+    if portfolio_env:
+        try:
+            data = json.loads(portfolio_env)
+            funds = data.get("funds", [])
+            if funds:
+                logger.info("Đã nạp danh mục thành công từ biến môi trường PORTFOLIO_JSON.")
+                return funds
+        except Exception as e:
+            logger.error("Lỗi đọc biến môi trường PORTFOLIO_JSON: %s", e)
+
+    # 2. Thử file local portfolio.json
     if _PORTFOLIO_PATH.exists():
         try:
             with open(_PORTFOLIO_PATH, "r", encoding="utf-8") as f:
@@ -59,7 +72,7 @@ def _load_portfolio() -> list:
     else:
         logger.warning(
             "Không tìm thấy portfolio.json tại %s. "
-            "Hãy tạo file này từ portfolio.json.example. Dùng danh mục mẫu.",
+            "Hãy tạo file này từ portfolio.json.example hoặc cấu hình biến PORTFOLIO_JSON. Dùng danh mục mẫu.",
             _PORTFOLIO_PATH,
         )
     # Fallback mẫu — chỉ để app không crash khi chưa có file

@@ -17,3 +17,5 @@ services:
         sync: false
       - key: GEMINI_MODEL
         value: gemini-2.0-flash
+      - key: PORTFOLIO_JSON
+        sync: false
