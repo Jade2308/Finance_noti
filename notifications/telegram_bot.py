@@ -182,7 +182,7 @@ class FinanceTelegramBot:
             "• <code>/market</code>: Xem chỉ số VN-Index, chỉ báo TA, tâm lý dòng tiền.\n"
             "• <code>/gold</code>: Xem giá mua/bán vàng miếng SJC mới nhất.\n"
             "• <code>/forex</code>: Xem tỷ giá USD/VND và ngoại tệ Vietcombank.\n"
-            "• <code>/news</code>: Xem top 5 tin tức tài chính nổi bật từ CafeF & VNExpress.\n"
+            "• <code>/news</code>: Xem tin tức tài chính kinh tế đa nguồn (CafeF, VnEconomy, VNExpress,...).\n"
             "• <code>/compare</code>: So sánh hiệu quả Quỹ mở vs Gửi NH vs Vàng SJC.\n"
             "• <code>/dca [số_tiền] [năm]</code>: Tính kế hoạch tích lũy (VD: <code>/dca 500000 3</code>).\n"
             "• <code>/alerts</code>: Xem các cảnh báo rủi ro biến động thị trường.\n"

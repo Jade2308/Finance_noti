@@ -434,9 +434,17 @@ class MessageFormatter:
         """Định dạng danh sách tin tức tài chính cho lệnh /news."""
         if not news_data:
             return "⚠️ Không có tin tức tài chính mới."
+
+        sources: List[str] = []
+        for item in news_data:
+            src = item.get("source")
+            if src and src not in sources:
+                sources.append(src)
+        sources_str = ", ".join(sources) if sources else "Đa nguồn tài chính uy tín"
+
         lines = [
             "📰 <b>TIN TỨC TÀI CHÍNH NỔI BẬT NHẤT</b>",
-            "<i>Tổng hợp từ CafeF và VNExpress Kinh Doanh</i>",
+            f"<i>Tổng hợp đa nguồn: {sources_str}</i>",
             f"{DIVIDER}\n",
         ]
         for idx, item in enumerate(news_data, 1):
