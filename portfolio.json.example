@@ -1,0 +1,19 @@
+{
+  "_comment": "Sao chép file này thành portfolio.json và điền thông tin giao dịch của bạn.",
+  "funds": [
+    {
+      "fund_code": "VEOF",
+      "fund_name": "Quỹ Đầu Tư Cổ Phiếu Doanh Nghiệp Hàng Đầu VinaCapital",
+      "transactions": [
+        {
+          "date": "YYYY-MM-DD",
+          "units": 0.0,
+          "buy_price": 0.0,
+          "invested": 0.0
+        }
+      ],
+      "total_units": 0.0,
+      "total_invested": 0.0
+    }
+  ]
+}
