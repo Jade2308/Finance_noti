@@ -44,7 +44,3 @@ logs/
 .idea/
 .DS_Store
 Thumbs.db
-
-# Danh mục đầu tư cá nhân — KHÔNG commit lên Git
-# Tạo từ portfolio.json.example
-portfolio.json

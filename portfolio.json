@@ -1,0 +1,25 @@
+{
+  "_comment": "Danh mục đầu tư cá nhân",
+  "funds": [
+    {
+      "fund_code": "VEOF",
+      "fund_name": "Quỹ Đầu Tư Cổ Phiếu Doanh Nghiệp Hàng Đầu VinaCapital",
+      "transactions": [
+        {
+          "date": "2023-02-09",
+          "units": 4.54,
+          "buy_price": 21987.82,
+          "invested": 99825.0
+        },
+        {
+          "date": "2025-11-13",
+          "units": 5.65,
+          "buy_price": 35375.25,
+          "invested": 199870.0
+        }
+      ],
+      "total_units": 10.19,
+      "total_invested": 299695.0
+    }
+  ]
+}
