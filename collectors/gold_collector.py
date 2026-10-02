@@ -5,6 +5,7 @@ Gold Collector - Thu thập giá vàng SJC và biến động giá vàng trong n
 import logging
 from typing import Dict, Any, Optional
 from datetime import datetime
+from config.settings import get_vietnam_now
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +30,7 @@ class GoldCollector:
                 buy = float(target["buy_price"])
                 sell = float(target["sell_price"])
                 spread = sell - buy
-                date_val = str(target.get("date", datetime.now().strftime("%Y-%m-%d")))
+                date_val = str(target.get("date", get_vietnam_now().strftime("%Y-%m-%d")))
 
                 return {
                     "name": str(target["name"]),
@@ -55,7 +56,7 @@ class GoldCollector:
             "buy_price": FALLBACK_BUY,
             "sell_price": FALLBACK_SELL,
             "spread": FALLBACK_SELL - FALLBACK_BUY,
-            "date": datetime.now().strftime("%Y-%m-%d"),
+            "date": get_vietnam_now().strftime("%Y-%m-%d"),
             "formatted_buy": f"{FALLBACK_BUY:,.0f} đ",
             "formatted_sell": f"{FALLBACK_SELL:,.0f} đ",
             "formatted_spread": f"{FALLBACK_SELL - FALLBACK_BUY:,.0f} đ",

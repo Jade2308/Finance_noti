@@ -8,6 +8,7 @@ from typing import Dict, Any, List, Optional
 from datetime import datetime, timedelta
 import requests
 import json
+from config.settings import get_vietnam_now
 
 logger = logging.getLogger(__name__)
 
@@ -96,7 +97,7 @@ class FundDataCollector:
             "VFF": 12000.0,     # Ước tính — cần cập nhật thủ công
         }
         fallback_nav = FALLBACK_NAV_DEFAULTS.get(fund_code, 20000.0)
-        fallback_date = datetime.now().strftime("%Y-%m-%d")
+        fallback_date = get_vietnam_now().strftime("%Y-%m-%d")
         logger.error("[FundCollector] Tất cả nguồn đều thất bại cho %s. Dùng snapshot NAV=%.2f", fund_code, fallback_nav)
         return {
             "fund_code": fund_code,

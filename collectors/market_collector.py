@@ -6,6 +6,7 @@ Tích hợp trực tiếp từ Vnstock Index OHLCV và Database Cache.
 import logging
 from typing import Dict, Any, Optional
 from datetime import datetime
+from config.settings import get_vietnam_now
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +58,7 @@ class MarketDataCollector:
                 change = latest_close - prev_close
                 change_pct = (change / prev_close) * 100
                 volume = float(latest.get("volume", 0))
-                time_val = str(latest.get("time", datetime.now().strftime("%Y-%m-%d")))
+                time_val = str(latest.get("time", get_vietnam_now().strftime("%Y-%m-%d")))
 
                 result: Dict[str, Any] = {
                     "index_code": "VNINDEX",

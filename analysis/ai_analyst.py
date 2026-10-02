@@ -77,15 +77,16 @@ class AIAnalyst:
                 "Sau khi cấu hình, AI sẽ tự động phân tích thị trường, tâm lý dòng tiền và giải thích căn nguyên.</i>"
             )
 
-        from datetime import datetime as _dt, date as _date
-        _now = _dt.now()
+        from datetime import date as _date
+        from config.settings import get_vietnam_now
+        _now = get_vietnam_now()
         _quarter = (_now.month - 1) // 3 + 1
         _period_note = "đầu năm (thường khởi sắc)" if _now.month <= 3 else \
                        "giữa năm (ổn định)" if _now.month <= 6 else \
                        "cuối năm Q3 (mùa KQKD Q2/3, cần chú ý)" if _now.month <= 9 else \
                        "cuối năm Q4 (hiệu ứng window dressing, thường tích cực)"
 
-        _lop1_days = (_date.today() - _date(2023, 2, 9)).days
+        _lop1_days = (_now.date() - _date(2023, 2, 9)).days
         _lop1_years = _lop1_days / 365.25
         _lop1_pnl = portfolio_analysis.get('funds', [{}])[0].get('pnl_pct', 0) if portfolio_analysis.get('funds') else 0
         _cagr_approx = ((1 + _lop1_pnl/100) ** (1/_lop1_years) - 1) * 100 if _lop1_years > 0.1 else _lop1_pnl

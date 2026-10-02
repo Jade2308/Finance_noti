@@ -5,6 +5,7 @@ Forex Collector - Thu thập tỷ giá ngoại tệ (USD/VND, EUR/VND).
 import logging
 from typing import Dict, Any, Optional
 from datetime import datetime
+from config.settings import get_vietnam_now
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +24,7 @@ class ForexCollector:
             df = ret.exchange_rate()
             if df is not None and not df.empty:
                 result: Dict[str, Any] = {}
-                date_val = str(df.iloc[0].get("date", datetime.now().strftime("%Y-%m-%d")))
+                date_val = str(df.iloc[0].get("date", get_vietnam_now().strftime("%Y-%m-%d")))
 
                 # Lấy USD
                 usd_df = df[df["currency_code"] == "USD"]
@@ -64,6 +65,6 @@ class ForexCollector:
                 "buy_transfer": "25,780",
                 "sell": "26,160",
             },
-            "date": datetime.now().strftime("%Y-%m-%d"),
+            "date": get_vietnam_now().strftime("%Y-%m-%d"),
             "source": "fallback",
         }

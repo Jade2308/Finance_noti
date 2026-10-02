@@ -7,9 +7,26 @@ import json
 import logging
 import os
 from pathlib import Path
+from datetime import datetime, timezone, timedelta
 from dotenv import load_dotenv
 
 logger = logging.getLogger(__name__)
+
+# ==========================================
+# 0. MÚI GIỜ (TIMEZONE)
+# ==========================================
+# Đảm bảo đồng bộ chuẩn giờ Việt Nam (UTC+7 / Asia/Ho_Chi_Minh) trên mọi môi trường (Render, Cloud, Docker)
+try:
+    from zoneinfo import ZoneInfo
+    VIETNAM_TZ = ZoneInfo("Asia/Ho_Chi_Minh")
+except Exception:
+    VIETNAM_TZ = timezone(timedelta(hours=7))
+
+
+def get_vietnam_now() -> datetime:
+    """Trả về datetime hiện tại chính xác theo múi giờ Việt Nam (Asia/Ho_Chi_Minh)."""
+    return datetime.now(VIETNAM_TZ)
+
 
 # Tìm và nạp file .env từ thư mục gốc dự án
 BASE_DIR = Path(__file__).resolve().parent.parent

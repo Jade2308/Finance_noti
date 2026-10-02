@@ -9,6 +9,7 @@ import logging
 import os
 import threading
 from datetime import datetime
+from config.settings import get_vietnam_now
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +21,7 @@ class HealthCheckHandler(http.server.BaseHTTPRequestHandler):
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.end_headers()
 
-            now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            now_str = get_vietnam_now().strftime("%Y-%m-%d %H:%M:%S (Asia/Ho_Chi_Minh)")
             html = f"""<!DOCTYPE html>
 <html lang="vi">
 <head>

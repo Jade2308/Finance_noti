@@ -19,3 +19,5 @@ services:
         value: gemini-2.0-flash
       - key: PORTFOLIO_JSON
         sync: false
+      - key: TZ
+        value: Asia/Ho_Chi_Minh

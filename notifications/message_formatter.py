@@ -8,6 +8,7 @@ import html
 import re
 from datetime import datetime
 from typing import Dict, Any, List, Optional
+from config.settings import get_vietnam_now
 
 DIVIDER = "─────────────────────"
 
@@ -144,7 +145,7 @@ class MessageFormatter:
         benchmark_summary: Optional[str] = None
     ) -> str:
         """Tạo bản tin tổng quan danh mục & thị trường (Dashboard - Tin nhắn 1)."""
-        now_str = datetime.now().strftime("%d/%m/%Y - %H:%M")
+        now_str = get_vietnam_now().strftime("%d/%m/%Y - %H:%M")
 
         lines = [
             "📋 <b>BÁO CÁO TÀI CHÍNH HÀNG NGÀY</b>",
@@ -391,7 +392,7 @@ class MessageFormatter:
         gold_tag = " <i>(Dữ liệu tham khảo)</i>" if gold_data.get("source") == "fallback" else ""
         return (
             f"🥇 <b>CHI TIẾT GIÁ VÀNG SJC HÔM NAY</b>{gold_tag}\n"
-            f"<i>Cập nhật: {gold_data.get('date', datetime.now().strftime('%Y-%m-%d'))}</i>\n"
+            f"<i>Cập nhật: {gold_data.get('date', get_vietnam_now().strftime('%Y-%m-%d'))}</i>\n"
             f"{DIVIDER}\n"
             f"• Tên sản phẩm: <b>{gold_data.get('name', 'Vàng miếng SJC')}</b>\n"
             f"• Giá mua vào: <b>{gold_data.get('formatted_buy', 'N/A')}</b>\n"
@@ -408,7 +409,7 @@ class MessageFormatter:
             return "⚠️ Chưa có dữ liệu tỷ giá."
         lines = [
             "💵 <b>BẢNG TỶ GIÁ NGOẠI TỆ (VIETCOMBANK)</b>",
-            f"<i>Cập nhật: {forex_data.get('date', datetime.now().strftime('%Y-%m-%d'))}</i>",
+            f"<i>Cập nhật: {forex_data.get('date', get_vietnam_now().strftime('%Y-%m-%d'))}</i>",
             f"{DIVIDER}",
         ]
         if "USD" in forex_data:
